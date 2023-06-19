@@ -103,16 +103,17 @@ async function getFastestPromise(array) {
  */
 
 async function chainPromises(array, action) {
-  console.dir(array);
   const results = [];
   // eslint-disable-next-line no-restricted-syntax
   for (const promise of array) {
     try {
       // eslint-disable-next-line no-await-in-loop
       const result = await promise;
-      results.push(result);
+      if (result) {
+        results.push(result);
+      }
     } catch (err) {
-      console.error(err);
+      // console.error(err);
     }
   }
   return new Promise((resolve) => {
