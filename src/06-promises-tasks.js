@@ -5,7 +5,6 @@
  *                                                                                                *
  ************************************************************************************************ */
 
-
 /**
  * Return Promise object that is resolved with string value === 'Hooray!!! She said "Yes"!',
  * if boolean value === true is passed, resolved with string value === 'Oh no, she said "No".',
@@ -28,10 +27,18 @@
  *      .catch((error) => console.log(error.message)) // 'Error: Wrong parameter is passed!
  *                                                    //  Ask her again.';
  */
-function willYouMarryMe(/* isPositiveAnswer */) {
-  throw new Error('Not implemented');
+function willYouMarryMe(isPositiveAnswer) {
+  return new Promise((resolve, reject) => {
+    if (!(typeof isPositiveAnswer === 'boolean')) {
+      reject(new Error('Wrong parameter is passed! Ask her again.'));
+    }
+    if (isPositiveAnswer) {
+      resolve('Hooray!!! She said "Yes"!');
+    } else {
+      resolve('Oh no, she said "No".');
+    }
+  });
 }
-
 
 /**
  * Return Promise object that should be resolved with array containing plain values.
@@ -48,8 +55,9 @@ function willYouMarryMe(/* isPositiveAnswer */) {
  *    })
  *
  */
-function processAllPromises(/* array */) {
-  throw new Error('Not implemented');
+async function processAllPromises(array) {
+  const data = await Promise.all(array);
+  return data;
 }
 
 /**
@@ -71,8 +79,9 @@ function processAllPromises(/* array */) {
  *    })
  *
  */
-function getFastestPromise(/* array */) {
-  throw new Error('Not implemented');
+async function getFastestPromise(array) {
+  const data = await Promise.race(array);
+  return data;
 }
 
 /**
@@ -92,8 +101,23 @@ function getFastestPromise(/* array */) {
  *    });
  *
  */
-function chainPromises(/* array, action */) {
-  throw new Error('Not implemented');
+
+async function chainPromises(array, action) {
+  console.dir(array);
+  const results = [];
+  // eslint-disable-next-line no-restricted-syntax
+  for (const promise of array) {
+    try {
+      // eslint-disable-next-line no-await-in-loop
+      const result = await promise;
+      results.push(result);
+    } catch (err) {
+      console.error(err);
+    }
+  }
+  return new Promise((resolve) => {
+    resolve(results.reduce(action));
+  });
 }
 
 module.exports = {
